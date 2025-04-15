@@ -1,5 +1,5 @@
 use super::file_entry::{FileEntry, FileType as FT};
-use std::fs::{self, File};
+use std::fs;
 use std::path::Path;
 
 pub struct Reader<'a> {

@@ -6,7 +6,7 @@ pub struct FileEntry {
     pub file_type: FileType,
     pub path: PathBuf,
     pub extension: String,
-    metadata: Metadata,
+    _metadata: Metadata,
 }
 
 #[derive(PartialEq)]
@@ -39,17 +39,32 @@ impl FileEntry {
             file_type,
             path,
             extension,
-            metadata,
+            _metadata: metadata,
         }
     }
 
-    pub fn get_category(&self) -> String {
+    pub fn get_category(&self) -> &str {
         match self.extension.as_str() {
-            "jpg" | "png" => "Images".to_string(),
-            "docx" | "pdf" => "Documents".to_string(),
-            "ts" | "js" => "Trash".to_string(),
-            _ => "Misc".to_string(),
+            "jpg" | "png" => "Images",
+            "docx" | "pdf" => "Documents",
+            "ts" | "js" => "Trash",
+            _ => "Misc",
         }
+    }
+
+    pub fn get_file_name(&self) -> String {
+        let file_name_os_str = self.path.file_name().unwrap();
+        let file_name_str = file_name_os_str.to_str().unwrap();
+        let file_name_owned = String::from(file_name_str);
+        file_name_owned.split('/').last().unwrap().to_string()
+    }
+
+    pub fn get_new_path(&self) -> String {
+        format!("{}/{}", self.get_category(), self.get_file_name())
+    }
+
+    pub fn get_current_path(&self) -> String {
+        self.path.parent().unwrap().to_str().unwrap().to_owned()
     }
 }
 
