@@ -1,11 +1,15 @@
 use std::fmt::{Debug, Display, Formatter, Result};
+use std::fs::{DirEntry, Metadata};
 use std::path::PathBuf;
 
-pub struct FileEntry<'a> {
-    path: &'a PathBuf,
-    extension: &'a str,
+pub struct FileEntry {
+    pub file_type: FileType,
+    pub path: PathBuf,
+    pub extension: String,
+    metadata: Metadata,
 }
 
+#[derive(PartialEq)]
 pub enum FileType {
     File,
     Dir,
@@ -13,28 +17,50 @@ pub enum FileType {
     Unknown,
 }
 
-impl<'a> FileEntry<'a> {
-    pub fn new(path: &'a PathBuf, extension: &'a str) -> Self {
-        FileEntry { path, extension }
+impl FileEntry {
+    pub fn new(file: &DirEntry) -> Self {
+        let metadata = file.metadata().unwrap();
+        let file_type = file
+            .file_type()
+            .map(|ft| match ft {
+                ft if ft.is_dir() => FileType::Dir,
+                ft if ft.is_file() => FileType::File,
+                ft if ft.is_symlink() => FileType::SymLink,
+                _ => FileType::Unknown,
+            })
+            .unwrap_or(FileType::Unknown);
+        let path = file.path();
+        let extension = match file.path().extension() {
+            None => String::new(),
+            Some(i) => i.to_str().unwrap_or("").to_string(),
+        };
+
+        FileEntry {
+            file_type,
+            path,
+            extension,
+            metadata,
+        }
     }
 
-    pub fn get_category(&self) -> &str {
-        match self.extension {
-            "jpg" | "png" => "Images",
-            "docx" | "pdf" => "Documents",
-            _ => "Misc",
+    pub fn get_category(&self) -> String {
+        match self.extension.as_str() {
+            "jpg" | "png" => "Images".to_string(),
+            "docx" | "pdf" => "Documents".to_string(),
+            _ => "Misc".to_string(),
         }
     }
 }
 
-impl<'a> Debug for FileEntry<'a> {
+impl Debug for FileEntry {
     fn fmt(&self, f: &mut Formatter) -> Result {
         write!(
             f,
-            "FileEntry {{ path: {:?}, extension: {:?}, category: {:?} }}",
+            "FileEntry {{ path: {:?}, type: {:?}, extension: {:?}, category: {:?} }}",
             self.path,
+            self.file_type,
             self.extension,
-            self.get_category(),
+            self.get_category()
         )
     }
 }
@@ -51,6 +77,12 @@ impl FileType {
 }
 
 impl Display for FileType {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "{}", self.message())
+    }
+}
+
+impl Debug for FileType {
     fn fmt(&self, f: &mut Formatter) -> Result {
         write!(f, "{}", self.message())
     }
