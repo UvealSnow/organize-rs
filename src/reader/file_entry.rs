@@ -47,6 +47,7 @@ impl FileEntry {
         match self.extension.as_str() {
             "jpg" | "png" => "Images".to_string(),
             "docx" | "pdf" => "Documents".to_string(),
+            "ts" | "js" => "Trash".to_string(),
             _ => "Misc".to_string(),
         }
     }

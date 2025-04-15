@@ -1,6 +1,8 @@
+use mover::Mover;
 use reader::Reader;
 use std::env;
 
+mod mover;
 mod reader;
 
 fn main() {
@@ -10,7 +12,5 @@ fn main() {
         args[0].split("/").last().unwrap()
     ));
 
-    let reader = Reader::new(dir);
-
-    reader.read_folder();
+    let mover = Mover::new(Reader::new(dir).read_folder());
 }
