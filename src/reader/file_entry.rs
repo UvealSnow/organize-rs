@@ -45,9 +45,13 @@ impl FileEntry {
 
     pub fn get_category(&self) -> &str {
         match self.extension.as_str() {
-            "jpg" | "png" => "Images",
-            "docx" | "pdf" => "Documents",
-            "ts" | "js" => "Trash",
+            "jpg" | "png" | "gif" => "Images",
+            "docx" | "pdf" | "html" => "Documents",
+            "txt" | "md" => "Text",
+            "css" | "scss" => "Styles",
+            "ts" | "js" => "Code",
+            "woff" | "woff2" | "otf" => "Fonts",
+            "json" | "conf" | "yml" | "yaml" | "toml" => "Config",
             _ => "Misc",
         }
     }
@@ -60,7 +64,7 @@ impl FileEntry {
     }
 
     pub fn get_new_path(&self) -> String {
-        format!("{}/{}", self.get_category(), self.get_file_name())
+        format!("{}", self.get_category())
     }
 
     pub fn get_current_path(&self) -> String {
