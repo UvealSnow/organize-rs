@@ -2,6 +2,7 @@ use super::file_entry::{FileEntry, FileType as FT};
 use std::fs;
 use std::path::PathBuf;
 
+#[allow(dead_code)]
 pub struct Reader {
     target_dir: PathBuf,
     exclude: Vec<String>,
