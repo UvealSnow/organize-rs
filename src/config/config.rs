@@ -1,12 +1,14 @@
 use std::path::PathBuf;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct Config {
     pub exclude: Vec<String>,
     pub target_dir: PathBuf,
     config_file_path: Option<PathBuf>,
     pub is_dry_run: bool,
     pub is_stats_run: bool,
+    pub is_verbose: bool,
 }
 
 impl Config {
@@ -15,6 +17,7 @@ impl Config {
         let mut config_file_path = None;
         let mut is_dry_run = false;
         let mut is_stats_run = false;
+        let mut is_verbose = false;
 
         let mut iter = args.into_iter().skip(1);
         let target_dir = match iter.next() {
@@ -26,6 +29,7 @@ impl Config {
             match arg.as_str() {
                 "--dry-run" => is_dry_run = true,
                 "--stats" => is_stats_run = true,
+                "--verbose" => is_verbose = true,
                 "--exclude" => {
                     let patterns = iter
                         .next()
@@ -48,6 +52,7 @@ impl Config {
             config_file_path,
             is_dry_run,
             is_stats_run,
+            is_verbose,
         })
     }
 }
