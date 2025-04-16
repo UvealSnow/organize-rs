@@ -31,7 +31,7 @@ You can customize the behavior of Organize-rs by using the following options:
 - [ ] `--version`: Show version information
 - [ ] `--config`: Specify a custom configuration file, the program will look for a file named `organize.yml|yaml` in the current directory by default
 - [ ] `--undo`: Undo the last organization operation, this works by taking the log of the last operation and moving the files back to their original locations.
-- [ ] `--dry-run`: (false) Show what would be done without actually moving any files
+- [x] `--dry-run`: (false) Show what would be done without actually moving any files
 - [ ] `--verbose`: (false) Show detailed output of the organization process.
 - [ ] `--interactive`: (false) Ask for confirmation before moving files.
 - [ ] `--exclude`: (null) Exclude certain file types from being organized. You can specify multiple file types separated by commas. For example: `--exclude jpg,png,mp4`
